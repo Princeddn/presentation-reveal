@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title></title>Bonjour Prince</title>
+  <title>Éditeur de slides Reveal.js</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.1/ace.js"></script>
   <style>
     body { font-family: sans-serif; padding: 10px; }
@@ -15,31 +15,47 @@
   <h2>📝 Mon éditeur Reveal.js</h2>
   <div id="editor">&lt;section&gt;Hello Prince 👑&lt;/section&gt;</div>
   <button onclick="afficher()">Afficher dans l’aperçu</button>
-  <iframe id="preview"></iframe>
+  <iframe id="preview"></iframe>Z
 
+<script>
+  const editor = ace.edit("editor");
+  editor.setTheme("ace/theme/monokai");
+  editor.session.setMode("ace/mode/html");
+
+  function afficher() {
+    const slides = editor.getValue();
+
+    const html = `
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/reveal.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/theme/white.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+      ${slides}
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js/dist/reveal.js"><\/script>
   <script>
-    const editor = ace.edit("editor");
-    editor.setTheme("ace/theme/monokai");
-    editor.session.setMode("ace/mode/html");
-
-    function afficher() {
-      document.getElementById('preview').srcdoc = `
-        <!doctype html>
-        <html>
-        <head>
-          <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/reveal.css">
-          <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/theme/black.css">
-        </head>
-        <body>
-          <div class="reveal"><div class="slides">
-            ${editor.getValue()}
-          </div></div>
-          <script src="https://unpkg.com/reveal.js/dist/reveal.js"></script>
-          <script>Reveal.initialize();</script>
-        </body>
-        </html>
-      `;
-    }
-  </script>
+    Reveal.initialize({
+      controls: true,
+      progress: true,
+      slideNumber: true,
+      transition: 'slide',
+      backgroundTransition: 'fade',
+      center: true
+    });
+  <\/script>
 </body>
 </html>
+    `;
+
+    document.getElementById('preview').srcdoc = html;
+  }
+</script>
