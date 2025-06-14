@@ -1,61 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <title>Éditeur de slides Reveal.js</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.1/ace.js"></script>
-  <style>
-    body { font-family: sans-serif; padding: 10px; }
-    #editor { height: 300px; width: 100%; border: 1px solid #444; }
-    #preview { width: 100%; height: 400px; border: 1px solid #ccc; margin-top: 10px; }
-    button { margin-top: 10px; padding: 10px 20px; font-weight: bold; }
-  </style>
-</head>
-<body>
-  <h2>📝 Mon éditeur Reveal.js</h2>
-  <div id="editor">&lt;section&gt;Hello Prince 👑&lt;/section&gt;</div>
-  <button onclick="afficher()">Afficher dans l’aperçu</button>
-  <iframe id="preview"></iframe>Z
+  <meta charset="UTF-8">
+  <title>Éditeur de Présentation - Prince</title>
 
-<script>
-  const editor = ace.edit("editor");
-  editor.setTheme("ace/theme/monokai");
-  editor.session.setMode("ace/mode/html");
-
-  function afficher() {
-    const slides = editor.getValue();
-
-    const html = `
-<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- CSS Reveal + ton style -->
   <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/reveal.css">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/theme/white.css">
+  <link id="themeStylesheet" rel="stylesheet" href="https://unpkg.com/reveal.js/dist/theme/white.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <div class="reveal">
-    <div class="slides">
-      ${slides}
+  <!-- Top menu -->
+  <div id="top-bar">
+    <h1>🧠 Présentation Builder - Prince</h1>
+    <div>
+      <label for="theme-select">Thème : </label>
+      <select id="theme-select">
+        <option value="white" selected>Clair</option>
+        <option value="black">Sombre</option>
+      </select>
+      <button onclick="addSlide()">➕ Slide</button>
+      <button onclick="removeSlide()">➖ Slide</button>
+      <button onclick="renderPresentation()">🎬 Voir aperçu</button>
     </div>
   </div>
 
-  <script src="https://unpkg.com/reveal.js/dist/reveal.js"><\/script>
-  <script>
-    Reveal.initialize({
-      controls: true,
-      progress: true,
-      slideNumber: true,
-      transition: 'slide',
-      backgroundTransition: 'fade',
-      center: true
-    });
-  <\/script>
+  <!-- Layout principal -->
+  <div id="main-layout">
+    <!-- Liste des slides -->
+    <div id="slides-list">
+      <ul id="slide-tabs"></ul>
+    </div>
+
+    <!-- Zone d'édition -->
+    <div id="editor">
+      <textarea id="slide-content" placeholder="<section>Mon slide</section>"></textarea>
+    </div>
+
+    <!-- Aperçu Reveal -->
+    <div id="preview">
+      <iframe id="preview-frame"></iframe>
+    </div>
+  </div>
+
+  <!-- JS Reveal + ton script -->
+  <script src="js/editor.js"></script>
 </body>
 </html>
-    `;
-
-    document.getElementById('preview').srcdoc = html;
-  }
-</script>
