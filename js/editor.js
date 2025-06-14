@@ -3,8 +3,11 @@ let currentSlideIndex = -1;
 
 // === Créer une nouvelle slide ===
 function addSlide() {
-  slides.push("<section><h2>Nouvelle Slide</h2><p>Contenu ici...</p></section>");
+  const transition = document.getElementById("transition-select").value;
+  const slideHTML = `<section data-transition="${transition}"><h2>Nouvelle Slide</h2><p>Contenu ici...</p></section>`;
+  slides.push(slideHTML);
   currentSlideIndex = slides.length - 1;
+  saveToLocalStorage();
   updateSlideList();
   loadCurrentSlide();
 }
@@ -14,6 +17,7 @@ function removeSlide() {
   if (currentSlideIndex >= 0 && slides.length > 0) {
     slides.splice(currentSlideIndex, 1);
     currentSlideIndex = Math.max(0, currentSlideIndex - 1);
+    saveToLocalStorage();
     updateSlideList();
     loadCurrentSlide();
   }
@@ -28,6 +32,7 @@ function updateSlideList() {
     li.textContent = `Slide ${index + 1}`;
     li.classList.toggle("active", index === currentSlideIndex);
     li.onclick = () => {
+      saveCurrentSlide();
       currentSlideIndex = index;
       loadCurrentSlide();
     };
@@ -41,10 +46,44 @@ function loadCurrentSlide() {
   textarea.value = slides[currentSlideIndex] || "";
 }
 
+// === Enregistrer les modifications dans le tableau ===
+function saveCurrentSlide() {
+  const textarea = document.getElementById("slide-content");
+  if (currentSlideIndex >= 0) {
+    slides[currentSlideIndex] = textarea.value;
+    saveToLocalStorage();
+  }
+}
+
+function openImageDialog() {
+  document.getElementById("image-dialog").style.display = "block";
+}
+
+function closeImageDialog() {
+  document.getElementById("image-dialog").style.display = "none";
+  document.getElementById("image-url").value = "";
+}
+
+function insertImage() {
+  const url = document.getElementById("image-url").value;
+  if (!url) return;
+  const textarea = document.getElementById("slide-content");
+  const imgTag = `<img src="${url}" alt="Image" style="max-width:100%;">\n`;
+  textarea.value += imgTag;
+  slides[currentSlideIndex] = textarea.value;
+  saveToLocalStorage();
+  closeImageDialog();
+  renderPresentation();
+}
+
+
 // === Générer et afficher l’aperçu Reveal.js ===
 function renderPresentation() {
+  saveCurrentSlide(); // 💾 toujours enregistrer avant l’aperçu
+
   const previewFrame = document.getElementById("preview-frame");
   const theme = document.getElementById("theme-select").value;
+  const transition = document.getElementById("transition-select").value;
   const slideContent = slides.map(s => s).join("\n");
 
   const html = `
@@ -67,7 +106,7 @@ function renderPresentation() {
       controls: true,
       progress: true,
       slideNumber: true,
-      transition: 'slide',
+      transition: '${transition}',
       backgroundTransition: 'fade',
       center: true
     });
@@ -79,14 +118,36 @@ function renderPresentation() {
   previewFrame.srcdoc = html;
 }
 
-// === Enregistrer les modifications dans la zone de texte ===
+// === Sauvegarder dans le localStorage ===
+function saveToLocalStorage() {
+  const data = {
+    slides,
+    currentSlideIndex
+  };
+  localStorage.setItem("revealEditorData", JSON.stringify(data));
+}
+
+// === Événement : modification du contenu ===
 document.getElementById("slide-content").addEventListener("input", (e) => {
   if (currentSlideIndex >= 0) {
     slides[currentSlideIndex] = e.target.value;
+    saveToLocalStorage();
   }
 });
 
-// === Gérer le changement de thème ===
-document.getElementById("theme-select").addEventListener("change", () => {
-  renderPresentation();
+// === Événement : changement de thème ou transition ===
+document.getElementById("theme-select").addEventListener("change", renderPresentation);
+document.getElementById("transition-select").addEventListener("change", renderPresentation);
+
+// === Charger depuis localStorage au démarrage ===
+window.addEventListener("DOMContentLoaded", () => {
+  const saved = localStorage.getItem("revealEditorData");
+  if (saved) {
+    const data = JSON.parse(saved);
+    slides = data.slides || [];
+    currentSlideIndex = data.currentSlideIndex ?? 0;
+    updateSlideList();
+    loadCurrentSlide();
+    renderPresentation();
+  }
 });
