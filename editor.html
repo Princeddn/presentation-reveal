@@ -7,52 +7,74 @@
   <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/reveal.css">
   <link id="themeStylesheet" rel="stylesheet" href="https://unpkg.com/reveal.js/dist/theme/white.css">
 </head>
-<div id="top-bar">
-  <h1>🧠 Présentation Builder - Prince</h1>
-  <div>
-    <label>Thème : </label>
-    <select id="theme-select">
-      <option value="white">Clair</option>
-      <option value="black">Sombre</option>
-    </select>
-    <label>Transition : </label>
-    <select id="transition-select">
-      <option value="none">Aucune</option>
-      <option value="fade">Fondu</option>
-      <option value="slide">Glissement</option>
-      <option value="convex">Convexe</option>
-      <option value="concave">Concave</option>
-      <option value="zoom">Zoom</option>
-    </select>
-    <button onclick="addSlide()">➕ Slide</button>
-    <button onclick="removeSlide()">➖ Slide</button>
-    <button onclick="renderPresentation()">🎬 Voir aperçu</button>
-    <button onclick="openImageDialog()">🖼️ Image</button>
-  </div>
-</div>
+<body>
+  <div id="top-bar">
+    <h1>🧠 Présentation Builder - Prince</h1>
+    <div>
+      <label>Thème : </label>
+      <select id="theme-select">
+        <option value="white">Clair</option>
+        <option value="black">Sombre</option>
+      </select>
 
+      <label>Transition : </label>
+      <select id="transition-select">
+        <option value="none">Aucune</option>
+        <option value="fade">Fondu</option>
+        <option value="slide">Glissement</option>
+        <option value="convex">Convexe</option>
+        <option value="concave">Concave</option>
+        <option value="zoom">Zoom</option>
+      </select>
+
+      <button onclick="addSlide()">➕ Slide</button>
+      <button onclick="removeSlide()">➖ Slide</button>
+      <button onclick="renderPresentation()">🎬 Voir aperçu</button>
+      <button onclick="openImageDialog()">🖼️ Image</button>
+      <button onclick="setBackground()">🎨 Arrière-plan</button>
+    </div>
+  </div>
+
+  <div id="tabs-bar">
+    <button onclick="showTab('preview')">👁️ Aperçu</button>
+    <button onclick="showTab('code')">🧾 Code</button>
+  </div>
 
   <div id="main-layout">
     <div id="slides-list">
       <ul id="slide-tabs"></ul>
     </div>
 
-    <div id="editor">
-      <textarea id="slide-content" placeholder="<section>Ma slide ici...</section>"></textarea>
-    </div>
-
-    <div id="preview">
+    <div id="preview" class="tab-content">
       <iframe id="preview-frame"></iframe>
     </div>
+
+    <div id="code" class="tab-content" style="display: none;">
+      <textarea id="slide-content" placeholder="<section>Ma slide ici...</section>"></textarea>
+    </div>
   </div>
-  
+
   <!-- Fenêtre modale pour insérer une image -->
   <div id="image-dialog" class="dialog" style="display:none;">
     <div class="dialog-content">
       <label for="image-url">URL de l’image :</label>
       <input type="text" id="image-url" placeholder="https://...">
+
+      <p>ou choisir un fichier :</p>
+      <input type="file" id="image-file" accept="image/*">
+
       <button onclick="insertImage()">Insérer</button>
       <button onclick="closeImageDialog()">Annuler</button>
+    </div>
+  </div>
+
+  <!-- Fenêtre modale pour arrière-plan -->
+  <div id="background-dialog" class="dialog" style="display:none;">
+    <div class="dialog-content">
+      <label>URL d’arrière-plan ou couleur (#fff, #000...) :</label>
+      <input type="text" id="background-input" placeholder="#f0f0f0 ou https://...">
+      <button onclick="applyBackground()">Appliquer</button>
+      <button onclick="closeBackgroundDialog()">Annuler</button>
     </div>
   </div>
 
