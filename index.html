@@ -32,6 +32,26 @@
       <button class="footer-button" onclick="saveCanvas()">💾 Sauvegarder</button>
     </div>
   </div>
+  <!-- Fenêtre modale -->
+<div id="widget-modal" class="modal">
+  <div class="modal-content">
+    <h2>⚙️ Créer un widget personnalisé</h2>
+    <label>HTML</label>
+    <textarea id="widget-html" oninput="updatePreview()"></textarea>
+
+    <label>CSS</label>
+    <textarea id="widget-css" oninput="updatePreview()"></textarea>
+
+    <label>JS (optionnel)</label>
+    <textarea id="widget-js" oninput="updatePreview()"></textarea>
+
+    <h3>Aperçu :</h3>
+    <iframe id="widget-preview"></iframe>
+
+    <button onclick="insertCustomWidget()">➕ Insérer</button>
+    <button onclick="closeModal()">Annuler</button>
+  </div>
+</div>
 
   <script src="js/editor.js"></script>
 </body>
