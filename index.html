@@ -19,6 +19,7 @@
         <!-- Éléments glissables -->
       </div>
     </div>
+
     <div class="sidebar">
       <h3>Widgets</h3>
       <div class="widget-button" onclick="addWidget('Texte')">🅣 Texte</div>
@@ -32,26 +33,36 @@
       <button class="footer-button" onclick="saveCanvas()">💾 Sauvegarder</button>
     </div>
   </div>
-  <!-- Fenêtre modale -->
-<div id="widget-modal" class="modal">
-  <div class="modal-content">
-    <h2>⚙️ Créer un widget personnalisé</h2>
-    <label>HTML</label>
-    <textarea id="widget-html" oninput="updatePreview()"></textarea>
 
-    <label>CSS</label>
-    <textarea id="widget-css" oninput="updatePreview()"></textarea>
-
-    <label>JS (optionnel)</label>
-    <textarea id="widget-js" oninput="updatePreview()"></textarea>
-
-    <h3>Aperçu :</h3>
-    <iframe id="widget-preview"></iframe>
-
-    <div class="widget-button" onclick="openCustomWidgetModal()">⚙️ Widget personnalisé</div>
-    <button onclick="closeModal()">Annuler</button>
+<!-- Panneau Widget Personnalisé -->
+<div id="custom-widget-panel">
+  <header class="cwp-header">
+    <h2>⚙️ Créer un widget</h2>
+    <nav class="cwp-tabs">
+      <button data-tab="html" class="active">HTML</button>
+      <button data-tab="css">CSS</button>
+      <button data-tab="js">JS</button>
+    </nav>
+  </header>
+  <div class="cwp-body">
+    <div class="cwp-code">
+      <textarea id="cwp-html" class="cwp-area"></textarea>
+      <textarea id="cwp-css"  class="cwp-area" style="display:none;"></textarea>
+      <textarea id="cwp-js"   class="cwp-area" style="display:none;"></textarea>
+    </div>
+    <div class="cwp-preview">
+      <div class="cwp-preview-inner">
+        <iframe id="cwp-iframe"></iframe>
+      </div>
+    </div>
   </div>
+  <footer class="cwp-footer">
+    <button id="cwp-preview-btn">🎯 Prévisualiser</button>
+    <button id="cwp-insert-btn">➕ Insérer</button>
+    <button id="cwp-close-btn">❌ Fermer</button>
+  </footer>
 </div>
+
 
   <script src="js/editor.js"></script>
 </body>
